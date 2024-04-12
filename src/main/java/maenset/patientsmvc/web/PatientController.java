@@ -23,6 +23,7 @@ public class PatientController {
                            @RequestParam(name = "size",defaultValue = "5") int size){
         Page<Patient> patientPage=patientRepository.findAll(PageRequest.of(page,size));
         model.addAttribute("listPatients",patientPage.getContent());
+        model.addAttribute("pages",new int[patientPage.getTotalPages()]);
         return "patients";
     }
 }
