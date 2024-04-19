@@ -34,6 +34,8 @@ layout:decorate="template1">
                     <td>
                         <a onclick="return confirm('etes vous sure?')" class="btn btn-danger" th:href="@{delete(id=${p.id},Keyword=${Keyword},page=${currentPage})}">Delete
                         </a>
+                        <a class="btn btn-success" th:href="@{editPatient(id=${p.id},Keyword=${Keyword},page=${currentPage})}">Edit
+                        </a>
                     </td>
                 </tr>
                 </tbody>

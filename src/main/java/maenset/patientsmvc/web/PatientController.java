@@ -1,6 +1,7 @@
 package maenset.patientsmvc.web;
 
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import maenset.patientsmvc.entities.Patient;
 import maenset.patientsmvc.repositories.PatientRepository;
@@ -8,10 +9,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.net.BindException;
 import java.util.List;
 
 @Controller
@@ -40,4 +45,27 @@ public class PatientController {
     public List<Patient> patientList(){
         return patientRepository.findAll();
     }
+    @GetMapping("/formPatients")
+    public String formPatients(Model model){
+        model.addAttribute("patient",new Patient());
+        return "formPatients";
+    }
+    @PostMapping("/save")
+    public String save(Model model, @Valid Patient patient, BindingResult bindingResult,
+                       @RequestParam(defaultValue = "0") int page,
+                       @RequestParam(defaultValue = " ") String Keyword){
+        if(bindingResult.hasErrors()) return "formPatients";
+        patientRepository.save(patient);
+        return "redirect:/index?page="+page+"&Keyword="+Keyword;
+    }
+    @GetMapping("/editPatient")
+    public String editPatient(Model model,Long id,String Keyword, int page){
+        Patient patient=patientRepository.findById(id).orElse(null);
+        if (patient==null)throw new RuntimeException("Patient introuvable");
+        model.addAttribute("patient",patient);
+        model.addAttribute("page",page);
+        model.addAttribute("Keyword",Keyword);
+        return "editPatient";
+    }
+
 }
