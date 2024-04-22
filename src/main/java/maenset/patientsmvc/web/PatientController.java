@@ -71,5 +71,14 @@ public class PatientController {
     public String home(){
         return "redirect:/user/index";
     }
+    @GetMapping("/notAuthorized")
+    public String handle() {
+        return "404";
+    }
+
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
 
 }

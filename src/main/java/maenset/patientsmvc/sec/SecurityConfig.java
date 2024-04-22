@@ -27,10 +27,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
-                .formLogin(Customizer.withDefaults())
+                .formLogin(form -> form.loginPage("/login").permitAll())
+                .rememberMe(r -> r.alwaysRemember(true))
+                .exceptionHandling(ex -> ex.accessDeniedPage("/notAuthorized"))
                 .authorizeHttpRequests(ar->ar.requestMatchers("/delete/**").hasRole("ADMIN"))
                 .authorizeHttpRequests(ar->ar.requestMatchers("/admin/**").hasRole("ADMIN"))
                 .authorizeHttpRequests(ar->ar.requestMatchers("/user/**").hasRole("USER"))
+                .authorizeHttpRequests(ar -> ar.requestMatchers("/webjars/**"))
                 .authorizeHttpRequests(ar->ar.anyRequest().authenticated())
                 .build();
     }
