@@ -73,7 +73,7 @@ public class PatientController {
     }
     @GetMapping("/notAuthorized")
     public String handle() {
-        return "404";
+        return "notAuthorized";
     }
 
     @GetMapping("/login")
