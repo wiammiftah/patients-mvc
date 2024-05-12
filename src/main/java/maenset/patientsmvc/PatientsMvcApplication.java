@@ -2,6 +2,7 @@ package maenset.patientsmvc;
 
 import maenset.patientsmvc.entities.Patient;
 import maenset.patientsmvc.repositories.PatientRepository;
+import maenset.patientsmvc.sec.service.AccountService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -21,8 +22,8 @@ public class PatientsMvcApplication {
 
         SpringApplication.run(PatientsMvcApplication.class, args);
     }
-    //@Bean
-    CommandLineRunner commandLineRunner(PatientRepository patientRepository){
+    @Bean
+    CommandLineRunner commandLineRunner1(PatientRepository patientRepository){
         return args -> {
             patientRepository.save(new Patient(null, "Hassan",new Date(),false,112));
             patientRepository.save(new Patient(null, "Wiam",new Date(),true,321));
@@ -34,7 +35,7 @@ public class PatientsMvcApplication {
 
         };
     }
- @Bean
+ //@Bean
     CommandLineRunner commandLineRunner(JdbcUserDetailsManager jdbcUserDetailsManager){
         PasswordEncoder passwordEncoder=passwordEncoder();
         return args -> {
@@ -54,6 +55,23 @@ public class PatientsMvcApplication {
             jdbcUserDetailsManager.createUser(
                     User.withUsername("admin2").password(passwordEncoder.encode("1234")).roles("USER","ADMIN").build()
             );
+        };
+    }
+
+    //@Bean
+    CommandLineRunner commandLineRunnerUserDetails(AccountService accountService){
+        return args -> {
+            accountService.addNewRole("USER");
+            accountService.addNewRole("ADMIN");
+            accountService.addNewUser("user1","1234","user1@gmil.com","1234");
+            accountService.addNewUser("user2","1234","user2@gmil.com","1234");
+            accountService.addNewUser("admin","1234","admin@gmil.com","1234");
+
+            accountService.addRoleToUser("user1","USER");
+            accountService.addRoleToUser("user2","USER");
+            accountService.addRoleToUser("admin","USER");
+            accountService.addRoleToUser("admin","ADMIN");
+
         };
     }
     @Bean
